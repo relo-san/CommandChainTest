@@ -1,1 +1,9 @@
-/AppBundle
+/app/config/parameters.yml
+/bin
+/src/AppBundle
+/tests
+/var
+/vendor
+/web/bundles
+/composer.phar
+/.idea
