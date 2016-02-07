@@ -3,11 +3,12 @@ declare(strict_types = 1);
 
 /**
  * Test project.
+ * @license http://www.spdx.org/licenses/MIT    MIT License
  */
 
 namespace FooBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -15,7 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * Hello command.
  * @author  Mykola Zyk <mykola.zyk@dinecat.com>
  */
-class HelloCommand extends ContainerAwareCommand
+class HelloCommand extends Command
 {
     /**
      * {@inheritDoc}

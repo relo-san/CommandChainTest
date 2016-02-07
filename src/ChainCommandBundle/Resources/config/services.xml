@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <parameters>
+        <parameter key="php_eol" type="constant">PHP_EOL</parameter>
+    </parameters>
+
+    <services>
+        <service id="chain_command.chain_manager" class="ChainCommandBundle\Console\ChainManager">
+            <argument /><!-- Collection of chains. -->
+            <argument type="service" id="event_dispatcher" />
+            <argument type="service" id="chain_command.logger" />
+        </service>
+
+        <service id="chain_command.command_listener" class="ChainCommandBundle\EventListener\CommandListener">
+            <argument type="service" id="chain_command.chain_manager" />
+            <tag name="kernel.event_listener" event="console.command" priority="-320" />
+        </service>
+
+        <service id="chain_command.terminate_listener" class="ChainCommandBundle\EventListener\TerminateListener">
+            <argument type="service" id="chain_command.chain_manager" />
+            <tag name="kernel.event_listener" event="console.terminate" priority="320" />
+        </service>
+
+        <service id="chain_command.chain_logging_listener" class="ChainCommandBundle\EventListener\ChainLoggingListener">
+            <argument type="service" id="chain_command.logger" />
+            <tag name="kernel.event_listener" event="console.chain.command" />
+            <tag name="kernel.event_listener" event="console.chain.members" />
+            <tag name="kernel.event_listener" event="console.chain.terminate" />
+        </service>
+
+        <service id="chain_command.logger" class="Symfony\Bridge\Monolog\Logger">
+            <argument type="string">console.chain</argument>
+            <call method="pushHandler">
+                <argument type="service" id="chain_command.logger_handler" />
+            </call>
+        </service>
+
+        <service id="chain_command.logger_handler" class="Monolog\Handler\StreamHandler">
+            <argument type="string">%kernel.logs_dir%/%kernel.environment%.log</argument>
+            <argument type="string">100</argument>
+            <call method="setFormatter">
+                <argument type="service" id="monolog.formatter.console_chain" />
+            </call>
+        </service>
+
+        <service id="monolog.formatter.console_chain" class="Monolog\Formatter\LineFormatter">
+            <argument type="string">[%%datetime%%] %%message%%%php_eol%</argument>
+        </service>
+    </services>
+</container>

@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 /**
  * Test project.
+ * @license http://www.spdx.org/licenses/MIT    MIT License
  */
 
 namespace BarBundle;
