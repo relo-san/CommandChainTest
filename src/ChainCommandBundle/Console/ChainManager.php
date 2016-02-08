@@ -16,6 +16,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\Console\Event\ConsoleExceptionEvent;
 use Symfony\Component\Console\Event\ConsoleTerminateEvent;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -225,8 +226,9 @@ class ChainManager
 
         foreach ($members as $member => $parent) {
             $memberCommand = $this->application->find($member);
+            $memberInput = new ArrayInput(['command' => $memberCommand->getName()]);
 
-            $this->chainExitCode = $this->doRun($memberCommand, $input, $output);
+            $this->chainExitCode = $this->doRun($memberCommand, $memberInput, $output);
         }
 
         $event = new ConsoleChainEvent($command, $input, $output, $members);
