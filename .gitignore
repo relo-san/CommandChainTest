@@ -1,7 +1,7 @@
 /app/config/parameters.yml
 /bin
 /src/AppBundle
-/tests
+/tests/AppBundle
 /var
 /vendor
 /web/bundles
