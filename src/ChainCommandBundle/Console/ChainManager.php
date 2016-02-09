@@ -214,7 +214,18 @@ class ChainManager
         $this->lastChain = $commandName;
         $members = $this->getMembers($commandName);
 
-        $output = new ConsoleLoggedOutput($this->logger);
+        $verbosity = ConsoleLoggedOutput::VERBOSITY_NORMAL;
+        if ($input->getParameterOption('-q') || $input->getParameterOption('--quiet')) {
+            $verbosity = ConsoleLoggedOutput::VERBOSITY_QUIET;
+        } elseif ($input->getParameterOption('-v')) {
+            $verbosity = ConsoleLoggedOutput::VERBOSITY_DEBUG;
+        } elseif ($input->getParameterOption('-vv')) {
+            $verbosity = ConsoleLoggedOutput::VERBOSITY_VERBOSE;
+        } elseif ($input->getParameterOption('-vvv')) {
+            $verbosity = ConsoleLoggedOutput::VERBOSITY_VERY_VERBOSE;
+        }
+
+        $output = new ConsoleLoggedOutput($this->logger, $verbosity);
 
         $event = new ConsoleChainEvent($command, $input, $output, $members);
         $this->dispatcher->dispatch(ChainConsoleEvents::COMMAND, $event);
